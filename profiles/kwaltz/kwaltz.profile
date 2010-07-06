@@ -143,6 +143,7 @@ function kwaltz_profile_tasks(&$task, $url) {
   // Publisher permissions are a superset of Moderator's permissions
   $publisher_permissions = array_merge($moderator_permissions, $publisher_permissions);
  
+  // Role IDs are hard-coded and matched up with the IDs in the features module
   install_add_permissions(3, $author_permissions);
   install_add_permissions(4, $moderator_permissions);
   install_add_permissions(5, $publisher_permissions);
@@ -153,6 +154,9 @@ function kwaltz_profile_tasks(&$task, $url) {
     node_access_rebuild();
   }
 
+  // Build the workflow so that it shows up initially in 
+  // admin/build/workflow without having to visit 
+  // admin/build/features
   features_rebuild();
 
   // Update the menu router information.
@@ -168,6 +172,6 @@ function kwaltz_profile_tasks(&$task, $url) {
 function kwaltz_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'install_configure') {
     // Set default for site name field.
-    $form['site_information']['site_name']['#kwaltz_value'] = $_SERVER['SERVER_NAME'];
+    $form['site_information']['site_name']['#default_value'] = $_SERVER['SERVER_NAME'];
   }
 }
