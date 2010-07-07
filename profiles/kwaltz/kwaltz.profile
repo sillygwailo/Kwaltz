@@ -8,7 +8,7 @@
  *   An array of modules to enable.
  */
 function kwaltz_profile_modules() {
-  $default = array('color', 'comment', 'help', 'menu', 'taxonomy', 'dblog');
+  $default = array('help', 'menu', 'taxonomy', 'dblog');
   $contrib = array(
     'module_grants', 'module_grants_monitor', 'node_tools',
     'user_tools', 'profile', 'trigger', 'smart_tabs', 'diff', 'features',
@@ -66,17 +66,6 @@ function kwaltz_profile_tasks(&$task, $url) {
   // documentation at: http://api.drupal.org/api/HEAD/function/hook_node_info.
   $types = array(
     array(
-      'type' => 'page',
-      'name' => st('Page'),
-      'module' => 'node',
-      'description' => st("A <em>page</em>, similar in form to a <em>story</em>, is a simple method for creating and displaying information that rarely changes, such as an \"About us\" section of a website. By default, a <em>page</em> entry does not allow visitor comments and is not featured on the site's initial home page."),
-      'custom' => TRUE,
-      'modified' => TRUE,
-      'locked' => FALSE,
-      'help' => '',
-      'min_word_count' => '',
-    ),
-    array(
       'type' => 'story',
       'name' => st('Story'),
       'module' => 'node',
@@ -95,8 +84,7 @@ function kwaltz_profile_tasks(&$task, $url) {
   }
 
   // Default page to not be promoted and have comments disabled.
-  variable_set('node_options_page', array('status'));
-  variable_set('comment_page', COMMENT_NODE_DISABLED);
+  variable_set('node_options_story', array('promote', 'revision', 'revision_moderation'));
 
   // Don't display date and author information for page nodes by default.
   $theme_settings = variable_get('theme_settings', array());
