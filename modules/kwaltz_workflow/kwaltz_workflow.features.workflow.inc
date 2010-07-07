@@ -9,9 +9,14 @@ function _kwaltz_workflow_workflow_defaults() {
     'name' => 'Moderation',
     'machine_name' => 'moderation',
     'tab_roles' => array(
-      '0' => NULL,
+      '0' => 'Moderator',
+      '1' => 'Publisher',
+      '2' => 'Writer',
     ),
-    'options' => NULL,
+    'options' => array(
+      'comment_log_node' => 1,
+      'comment_log_tab' => 1,
+    ),
     'states' => array(
       '1' => array(
         'ref' => '1',
@@ -61,6 +66,49 @@ function _kwaltz_workflow_workflow_defaults() {
           '0' => array(
             'from' => '1',
             'to' => '2',
+          ),
+          '1' => array(
+            'from' => '5',
+            'to' => '2',
+          ),
+        ),
+      ),
+      'Moderator' => array(
+        'name' => 'Moderator',
+        'transitions' => array(
+          '0' => array(
+            'from' => '3',
+            'to' => '2',
+          ),
+          '1' => array(
+            'from' => '3',
+            'to' => '4',
+          ),
+        ),
+      ),
+      'Publisher' => array(
+        'name' => 'Publisher',
+        'transitions' => array(
+          '0' => array(
+            'from' => '4',
+            'to' => '2',
+          ),
+          '1' => array(
+            'from' => '4',
+            'to' => '3',
+          ),
+          '2' => array(
+            'from' => '4',
+            'to' => '5',
+          ),
+        ),
+      ),
+      'Writer' => array(
+        'name' => 'Writer',
+        'transitions' => array(
+          '0' => array(
+            'from' => '2',
+            'to' => '3',
           ),
         ),
       ),
