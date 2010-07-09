@@ -46,6 +46,20 @@ function kwaltz_profile_task_list() {
 }
 
 /**
+ * Given a workflow machine name, return the numeric workflow ID
+ *
+ * Assumes the presence of the patch to add Features compatibility
+ * available at http://drupal.org/node/558378
+ *
+ * @return
+ *   numeric workflow ID
+ */
+function _install_get_wid($machine_name) {
+  $wid = db_result(db_query_range("SELECT wid FROM {workflows} WHERE machine_name ='%s'", $machine_name, 0, 1));
+  return $wid;
+}
+
+/**
  * Perform any final installation tasks for this profile.
  *
  * @param $task
@@ -146,6 +160,19 @@ function kwaltz_profile_tasks(&$task, $url) {
   // admin/build/workflow without having to visit 
   // admin/build/features
   features_rebuild();
+
+  // We know the workflow we'll need has the machine name 'moderation',
+  // since that's what we use in the kwaltz_workflow features module.
+  $moderation_workflow = _install_get_wid('moderation');
+  $workflow_types = array();
+  $workflow_types['story'] = array(
+    'workflow' => $moderation_workflow,
+    'placement' => array(
+      'node' => TRUE, 
+      'comment' => FALSE
+    ),
+  );
+  workflow_types_save($workflow_types);
 
   // Update the menu router information.
   menu_rebuild();
