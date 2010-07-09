@@ -46,54 +46,6 @@ function kwaltz_profile_task_list() {
 }
 
 /**
- * Given a workflow machine name, return the numeric workflow ID
- *
- * Assumes the presence of the patch to add Features compatibility
- * available at http://drupal.org/node/558378
- *
- * @return
- *   numeric workflow ID
- */
-function _install_workflow_get_wid($machine_name) {
-  $wid = db_result(db_query_range("SELECT wid FROM {workflows} WHERE machine_name ='%s'", $machine_name, 0, 1));
-  return $wid;
-}
-
-/**
- * Get a workflow's transition ID based on the from state and the to states
- *
- * @param $from
- *   The numeric ID of the original state.
- * @param $to
- *   The numeric ID of the transitioning-to state.
- * @return
- *   A numeric transition ID.
- */
-function _install_workflow_get_transition_id($from, $to) {
-  $tid = db_result(db_query("SELECT tid FROM {workflow_transitions} WHERE sid = %d AND target_sid = %d", $from, $to));
-  return $tid;
-}
-
-/**
- * Get a workflow state ID from its name.
- *
- * @param $state_name
- *   A string containing the state's name
- * @param $module
- *   A string containing the module that uses the state. Defaults to 'workflow'
- * @return
- *   The numeric state ID.
- */
-function _install_workflow_get_sid_by_name($state_name, $module = NULL) {
-  if (!isset($module)) {
-    $module = 'workflow';
-  }
-  $sid = db_result(db_query("SELECT sid FROM {workflow_states} WHERE state = '%s' AND module = '%s'", $state_name, $module));
-  return $sid;
-}
-
-
-/**
  * Perform any final installation tasks for this profile.
  *
  * @param $task
@@ -197,7 +149,7 @@ function kwaltz_profile_tasks(&$task, $url) {
 
   // We know the workflow we'll need has the machine name 'moderation',
   // since that's what we use in the kwaltz_workflow features module.
-  $moderation_workflow = _install_workflow_get_wid('moderation');
+  $moderation_workflow = install_workflow_get_wid('moderation');
   $workflow_types = array();
   $workflow_types['story'] = array(
     'workflow' => $moderation_workflow,
@@ -208,9 +160,9 @@ function kwaltz_profile_tasks(&$task, $url) {
   );
   workflow_types_save($workflow_types);
 
-  $original_state = _install_workflow_get_sid_by_name('Is Moderated', 'kwaltz_workflow');
-  $transition_state = _install_workflow_get_sid_by_name('Live', 'kwaltz_workflow');
-  $transition_id = _install_workflow_get_transition_id($original_state, $transition_state);
+  $original_state = install_workflow_get_sid('Is Moderated', 'kwaltz_workflow');
+  $transition_state = install_workflow_get_sid('Live', 'kwaltz_workflow');
+  $transition_id = install_workflow_get_transition_id($original_state, $transition_state);
 
   if ($transition_id) {
 

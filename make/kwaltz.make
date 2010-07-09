@@ -50,7 +50,5 @@ projects[features][download][root] = ":pserver:anonymous:anonymous@cvs.drupal.or
 projects[features][download][revision] = "DRUPAL-6--1-0-BETA8"
 
 projects[install_profile_api][type] = "module"
-projects[install_profile_api][download][type] = "cvs"
-projects[install_profile_api][download][module] = "contributions/modules/install_profile_api"
-projects[install_profile_api][download][root] = ":pserver:anonymous:anonymous@cvs.drupal.org:/cvs/drupal"
-projects[install_profile_api][download][revision] = "DRUPAL-6--2"
+projects[install_profile_api][download][type] = "git"
+projects[install_profile_api][download][url] = "git://github.com/sillygwailo/install_profile_api.git"
