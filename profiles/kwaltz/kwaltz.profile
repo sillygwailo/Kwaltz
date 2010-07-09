@@ -174,6 +174,21 @@ function kwaltz_profile_tasks(&$task, $url) {
   );
   workflow_types_save($workflow_types);
 
+  // Thanks to http://drupal.org/node/822468 sample code to programmatically
+  // assign actions.
+  //
+  // Workflow transition ID #7 hard-coded for now. The Trigger module
+  // automatically adds a 'save post' action.
+  module_load_include('inc', 'trigger', 'trigger.admin');
+  foreach (actions_actions_map(actions_get_all_actions()) as $aid => $action) {
+    if ($action['callback'] == 'node_publish_action') {
+      $form_values['aid'] = $aid;
+      $form_values['hook'] = 'workflow';
+      $form_values['operation'] = 'workflow-story-7';
+      trigger_assign_form_submit(array(), array('values' => $form_values));
+    }
+  }
+
   // Update the menu router information.
   menu_rebuild();
 }
