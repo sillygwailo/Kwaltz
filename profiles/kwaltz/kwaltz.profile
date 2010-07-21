@@ -132,9 +132,14 @@ function kwaltz_profile_tasks(&$task, $url) {
   $publisher_permissions = array_merge($moderator_permissions, $publisher_permissions);
  
   // Role IDs are hard-coded and matched up with the IDs in the features module
-  install_add_permissions(3, $author_permissions);
-  install_add_permissions(4, $moderator_permissions);
-  install_add_permissions(5, $publisher_permissions);
+
+  $author_rid = install_get_rid('Writer');
+  $moderator_rid = install_get_rid('Moderator');
+  $publisher_rid = install_get_rid('Publisher');
+
+  install_add_permissions($author_rid, $author_permissions);
+  install_add_permissions($moderator_rid, $moderator_permissions);
+  install_add_permissions($publisher_rid, $publisher_permissions);
 
   // Workflow requires a permissions rebuild. Otherwise Drupal
   // complains, and manual intervention is necessary.
@@ -180,7 +185,7 @@ function kwaltz_profile_tasks(&$task, $url) {
       }
     }
 
-  } 
+  }
   // Update the menu router information.
   menu_rebuild();
 }
