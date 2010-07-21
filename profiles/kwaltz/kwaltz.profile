@@ -165,8 +165,14 @@ function kwaltz_profile_tasks(&$task, $url) {
   );
   workflow_types_save($workflow_types);
 
-  $original_state = install_workflow_get_sid('Is Moderated', 'kwaltz_workflow');
-  $transition_state = install_workflow_get_sid('Live', 'kwaltz_workflow');
+  // store some state IDs. We'll use them latter too.
+  $draft = install_workflow_get_sid('Draft', 'kwaltz_workflow');
+  $in_moderation = install_workflow_get_sid('In Moderation', 'kwaltz_workflow');
+  $is_moderated = install_workflow_get_sid('Is Moderated', 'kwaltz_workflow');
+  $live = install_workflow_get_sid('Live', 'kwaltz_workflow');
+
+  $original_state = $is_moderated;
+  $transition_state = $live;
   $transition_id = install_workflow_get_transition_id($original_state, $transition_state);
 
   if ($transition_id) {
@@ -186,6 +192,42 @@ function kwaltz_profile_tasks(&$task, $url) {
     }
 
   }
+
+  // build Workflow access control
+
+  $access = array();
+
+  $draft = install_workflow_get_sid('Draft', 'kwaltz_workflow');
+  $in_moderation = install_workflow_get_sid('In Moderation', 'kwaltz_workflow');
+  $is_moderated = install_workflow_get_sid('Is Moderated', 'kwaltz_workflow');
+  $live = install_workflow_get_sid('Live', 'kwaltz_workflow');
+
+  $moderation_workflow_states = array_keys(workflow_get_states($moderation_workflow));
+
+  $rids = array_keys(user_roles(FALSE));
+
+  // default permissions are unchecked
+  $zeros = array();
+  foreach ($rids as $rid) {
+    $zeroes[$rid] = 0;
+  }
+  
+  foreach ($moderation_workflow_states as $moderation_workflow_state) {
+    $access[$moderation_workflow_state] = array(
+      'view' => $zeroes,
+      'update' => $zeroes,
+      'delete' => $zeroes,
+    );
+  }
+
+  // override default access control permissions
+  $access[$draft]['view'][$publisher_rid] = $publisher_rid;
+  $access[$in_moderation]['update'][$moderator_rid] = $moderator_rid;
+  $access[$is_moderated]['update'][$publisher_rid] = $publisher_rid;
+
+  // save the permissions
+  workflow_access_form_submit(array(), array('values' => array('workflow_access' => $access)));
+
   // Update the menu router information.
   menu_rebuild();
 }
