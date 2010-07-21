@@ -157,8 +157,8 @@ function kwaltz_profile_tasks(&$task, $url) {
   $moderation_workflow = install_workflow_get_wid('moderation');
   $workflow_types = array();
   $workflow_types['story'] = array(
-    'workflow' => $moderation_workflow,
-    'placement' => array(
+      'workflow' => $moderation_workflow,
+      'placement' => array(
       'node' => TRUE, 
       'comment' => FALSE
     ),
