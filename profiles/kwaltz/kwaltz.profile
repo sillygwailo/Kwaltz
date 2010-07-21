@@ -98,9 +98,10 @@ function kwaltz_profile_tasks(&$task, $url) {
   // required Features module assigns workflows to the numeric role ID.
 
   install_include(kwaltz_profile_modules());
-  install_add_role('Writer');
-  install_add_role('Moderator');
-  install_add_role('Publisher');
+
+  $author_rid = install_add_role('Writer');
+  $moderator_rid = install_add_role('Moderator');
+  $publisher_rid = install_add_role('Publisher');
 
   $moderator_permissions = array(
     'access All tab',
@@ -132,10 +133,9 @@ function kwaltz_profile_tasks(&$task, $url) {
   $publisher_permissions = array_merge($moderator_permissions, $publisher_permissions);
  
   // Role IDs are hard-coded and matched up with the IDs in the features module
-
-  $author_rid = install_get_rid('Writer');
-  $moderator_rid = install_get_rid('Moderator');
-  $publisher_rid = install_get_rid('Publisher');
+  install_add_permissions(3, $author_permissions);
+  install_add_permissions(4, $moderator_permissions);
+  install_add_permissions(5, $publisher_permissions);
 
   install_add_permissions($author_rid, $author_permissions);
   install_add_permissions($moderator_rid, $moderator_permissions);
