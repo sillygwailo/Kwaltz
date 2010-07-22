@@ -203,21 +203,28 @@ function kwaltz_profile_tasks(&$task, $url) {
   $rids = array_keys(user_roles(FALSE));
 
   // default permissions are unchecked
-  $zeros = array();
+  $zeroes = array();
   foreach ($rids as $rid) {
     $zeroes[$rid] = 0;
   }
+
+  // Anonymous and authenticated user roles get the view access permissions
+  // though as the instructions explain, they get overriden by the
+  // User management > Permissions page
+  $default_view_access = $zeroes;
+  $default_view_access[DRUPAL_ANONYMOUS_RID] = DRUPAL_ANONYMOUS_RID;
+  $default_view_access[DRUPAL_AUTHENTICATED_RID] = DRUPAL_AUTHENTICATED_RID;
   
   foreach ($moderation_workflow_states as $moderation_workflow_state) {
     $access[$moderation_workflow_state] = array(
-      'view' => $zeroes,
+      'view' => $default_view_access,
       'update' => $zeroes,
       'delete' => $zeroes,
     );
   }
 
-  // override default access control permissions
-  $access[$draft]['view'][$publisher_rid] = $publisher_rid;
+  // modify the default access control permissions
+  $access[$draft]['update'][$author_rid] = $author_rid;
   $access[$in_moderation]['update'][$moderator_rid] = $moderator_rid;
   $access[$is_moderated]['update'][$publisher_rid] = $publisher_rid;
 
