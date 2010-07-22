@@ -137,10 +137,6 @@ function kwaltz_profile_tasks(&$task, $url) {
   install_add_permissions(4, $moderator_permissions);
   install_add_permissions(5, $publisher_permissions);
 
-  install_add_permissions($author_rid, $author_permissions);
-  install_add_permissions($moderator_rid, $moderator_permissions);
-  install_add_permissions($publisher_rid, $publisher_permissions);
-
   // Workflow requires a permissions rebuild. Otherwise Drupal
   // complains, and manual intervention is necessary.
   if (node_access_needs_rebuild()) {
