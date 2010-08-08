@@ -1,6 +1,0 @@
-core = "6.x"
-description = "Based on the instructions available at http://jamestombs.co.uk/2010-06-30/create-a-multi-step-moderation-process-in-drupal-6/118"
-features[workflow][] = "moderation"
-name = "Kwaltz Workflow"
-package = "Features"
-project = "kwaltz_workflow"
