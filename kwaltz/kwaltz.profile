@@ -29,7 +29,7 @@ function kwaltz_profile_modules() {
 function kwaltz_profile_details() {
   return array(
     'name' => 'Kwaltz',
-    'description' => 'A simple multi-step workflow. Based on the instructions at http://jamestombs.co.uk/2010-07-05/displaying-nodes-as-blocks-using-block-api/1252 .'
+    'description' => 'A simple multi-step workflow. Based on <a title="Create a multi-step moderation process in Drupal 6" href="http://jamestombs.co.uk/2010-06-30/create-a-multi-step-moderation-process-in-drupal-6/1189">the instructions by James Tombs</a>.'
   );
 }
 
