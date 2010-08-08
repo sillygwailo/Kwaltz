@@ -137,12 +137,6 @@ function kwaltz_profile_tasks(&$task, $url) {
   install_add_permissions(4, $moderator_permissions);
   install_add_permissions(5, $publisher_permissions);
 
-  // Workflow requires a permissions rebuild. Otherwise Drupal
-  // complains, and manual intervention is necessary.
-  if (node_access_needs_rebuild()) {
-    node_access_rebuild();
-  }
-
   // Build the workflow so that it shows up initially in 
   // admin/build/workflow without having to visit 
   // admin/build/features
@@ -189,47 +183,11 @@ function kwaltz_profile_tasks(&$task, $url) {
 
   }
 
-  // build Workflow access control
-
-  $access = array();
-
-  $draft = install_workflow_get_sid('Draft', 'kwaltz_workflow');
-  $in_moderation = install_workflow_get_sid('In Moderation', 'kwaltz_workflow');
-  $is_moderated = install_workflow_get_sid('Is Moderated', 'kwaltz_workflow');
-  $live = install_workflow_get_sid('Live', 'kwaltz_workflow');
-
-  $moderation_workflow_states = array_keys(workflow_get_states($moderation_workflow));
-
-  $rids = array_keys(user_roles(FALSE));
-
-  // default permissions are unchecked
-  $zeroes = array();
-  foreach ($rids as $rid) {
-    $zeroes[$rid] = 0;
+  // Workflow requires a permissions rebuild. Otherwise Drupal
+  // complains, and manual intervention is necessary.
+  if (node_access_needs_rebuild()) {
+    node_access_rebuild();
   }
-
-  // Anonymous and authenticated user roles get the view access permissions
-  // though as the instructions explain, they get overriden by the
-  // User management > Permissions page
-  $default_view_access = $zeroes;
-  $default_view_access[DRUPAL_ANONYMOUS_RID] = DRUPAL_ANONYMOUS_RID;
-  $default_view_access[DRUPAL_AUTHENTICATED_RID] = DRUPAL_AUTHENTICATED_RID;
-  
-  foreach ($moderation_workflow_states as $moderation_workflow_state) {
-    $access[$moderation_workflow_state] = array(
-      'view' => $default_view_access,
-      'update' => $zeroes,
-      'delete' => $zeroes,
-    );
-  }
-
-  // modify the default access control permissions
-  $access[$draft]['update'][$author_rid] = $author_rid;
-  $access[$in_moderation]['update'][$moderator_rid] = $moderator_rid;
-  $access[$is_moderated]['update'][$publisher_rid] = $publisher_rid;
-
-  // save the permissions
-  workflow_access_form_submit(array(), array('values' => array('workflow_access' => $access)));
 
   // Update the menu router information.
   menu_rebuild();
