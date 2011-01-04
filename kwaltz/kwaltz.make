@@ -2,7 +2,7 @@ core = 6.x
 
 projects[drupal][type] = core
 projects[drupal][download][type] = cvs
-projects[drupal][download][revision] = DRUPAL-6-19
+projects[drupal][download][revision] = DRUPAL-6-20
 projects[drupal][download][root] = ":pserver:anonymous:anonymous@cvs.drupal.org:/cvs/drupal"
 projects[drupal][download][module] = drupal
 
